@@ -109,5 +109,4 @@ class HomeController extends Controller
             return $this->index();
         }
     }
-    
 }
