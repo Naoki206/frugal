@@ -33,17 +33,46 @@ class HomeController extends Controller
         };
 
         //支出追加フォームに渡すカテゴリ一覧
-        $categories = DB::table('expence_categories')->where('user_id', '=', $user_id)->get();
+        $fixed_cost_categories = $this->getCategories(1, $user_id);
+        $variable_cost_categories = $this->getCategories(0, $user_id);
+
+        //↓DBに二回接続するのと以下のように一回のDB接続でforeachで振り分けするのだったらどっちがよいのだろう。
+        // $categories = DB::table('expence_categories')->where('user_id', '=', $user_id)->get();
+        // $fixed_cost_categories = array();
+        // $variable_cost_categories = array();
+        // foreach ($categories as $category) {
+        //     if ($category->fixed_cost_flg) {
+        //         $fixed_cost_categories[] = $category;
+        //     } else {
+        //         $variable_cost_categories[] = $category;
+        //     }
+        // }
 
         // 日時取得
         $this_month = date("m");
         return view('home')->with([
             'income' => $income,
             'this_month' => $this_month,
-            'expence_categories' => $categories,
+            'fixed_cost_categories' => $fixed_cost_categories,
+            'variable_cost_categories' => $variable_cost_categories,
+            // 'expence_categories' => $categories,
         ]);
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCategories($fixed_cost_flg, $user_id) {
+        $categories = 
+        DB::table('expence_categories')
+            ->where('user_id', '=', $user_id)
+            ->where('fixed_cost_flg', '=', $fixed_cost_flg)
+            ->get();
+        return $categories;
+    }
+ 
     /**
      * Show the application dashboard.
      *
@@ -93,7 +122,7 @@ class HomeController extends Controller
         $method = $request->method();
         if ($request->isMethod('get')) {
             // 支出登録ページへ遷移させる
-            return view('add_expence_categort_form');
+            return view('add_expence_category_form');
         } else {
             $name = $request->input('name');
             $fixed_cost_flg = $request->input('fixed_cost');
@@ -108,5 +137,68 @@ class HomeController extends Controller
             // TOPページへ遷移させる
             return $this->index();
         }
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function categoryDetail($id) {
+        $category =DB::table('expence_categories')
+                        ->where('id', '=', $id)
+                        ->first();
+
+        return view('category_detail')->with([
+            'category' => $category,
+        ]);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function editExpenceCategory(Request $request, $id) {
+        $method = $request->method();
+        if ($request->isMethod('get')) {
+            $category = DB::table('expence_categories')
+                            ->where('id' , '=', $id)
+                            ->first();
+            // 支出登録ページへ遷移させる
+            return view('edit_expence_category')->with([
+                'category' => $category,
+            ]);
+        } else {
+            $name = $request->input('name');
+            $fixed_cost_flg = $request->input('fixed_cost');
+            $maximum_price = $request->input('maximum_price');
+            //カテゴリ更新
+            DB::table('expence_categories')
+                ->where('id' , '=', $id)
+                ->update([
+                    'name' => $name,
+                    'fixed_cost_flg' => $fixed_cost_flg,
+                    'maximum_price' => $maximum_price,
+                    'user_id' => Auth::id(),
+                ]);
+            // カテゴリー詳細へ遷移させる
+            return $this->categoryDetail($id);
+        }
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function deleteExpenceCategory($id) {
+        //該当レコード削除
+        // TODO 論理削除に。 & 削除確認ポップを出す。
+        DB::table('expence_categories')
+            ->where('id' , '=', $id)
+            ->delete();
+        // TOPページへ遷移させる
+        return $this->index();  
     }
 }
