@@ -5,7 +5,7 @@
 </head>
 <body>
 <h2>支出フォルダ編集</h2>
-<form action="/edit_expence_category/{{ $category->id }}" method="POST">
+<form action="/add_expence_category" method="POST">
     名前:
     <input name="name" value={{ $category->name }}>
     <br>
@@ -25,7 +25,7 @@
     <br>
     {{ csrf_field() }}
     <br>
-    <button class="btn btn-success"> 更新 </button>
+    <button class="btn btn-success"> 編集 </button>
 </form>
 </body>
 </html>
