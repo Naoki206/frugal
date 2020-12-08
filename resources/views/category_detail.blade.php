@@ -21,6 +21,7 @@
 <br>
 <a href="/edit_expence_category/{{ $category->id }}">編集</a>
 <a href="/delete_expence_category/{{ $category->id }}">削除</a>
+<a href="/home">戻る</a>
 
 </body>
 </html>
