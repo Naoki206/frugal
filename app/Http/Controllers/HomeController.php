@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Expence;
 use App\ExpenceCategory;
+use App\User;
 
 use Illuminate\Http\Request;
 
@@ -83,10 +84,9 @@ class HomeController extends Controller
     public function initialSetting(Request $request)
     {
         // incomeの更新
-        $income = $request->input('income');
-        DB::table('users')
-            ->where('id', Auth::id())
-            ->update(['income' => $income]);
+        $user = User::find(Auth::id());
+        $user->income = $request->input('income');
+        $user->save();
 
         // TOPページへ遷移させる
         return $this->index();
@@ -99,16 +99,12 @@ class HomeController extends Controller
      */
     public function addExpence(Request $request)
     {
-        $price = $request->input('price');
-        $name = $request->input('name');
-        $category_id = $request->input('category');
-
         //expencesにインサート
-        DB::table('expences')->insert([
-            'price' => $price,
-            'name' => $name, 
-            'expence_category_id' => $category_id,
-        ]);
+        $expence = new Expence();
+        $expence->price = $request->input('price');
+        $expence->name = $request->input('name');
+        $expence->expence_category_id = $request->input('category');
+        $expence->save();
         
         //TOP画面に遷移
         return $this->index();
@@ -126,16 +122,14 @@ class HomeController extends Controller
             // 支出登録ページへ遷移させる
             return view('add_expence_category_form');
         } else {
-            $name = $request->input('name');
-            $fixed_cost_flg = $request->input('fixed_cost');
-            $maximum_price = $request->input('maximum_price');
             //expencesにインサート
-            DB::table('expence_categories')->insert([
-                'name' => $name,
-                'fixed_cost_flg' => $fixed_cost_flg,
-                'maximum_price' => $maximum_price,
-                'user_id' => Auth::id(),
-            ]);
+            $category = new ExpenceCategory();
+            $category->fixed_cost_flg = $request->input('fixed_cost');
+            $category->name = $request->input('name');
+            $category->maximum_price = $request->input('maximum_price');
+            $category->user_id= Auth::id();
+            $category->save();
+        
             // TOPページへ遷移させる
             return $this->index();
         }
@@ -162,26 +156,19 @@ class HomeController extends Controller
     public function editExpenceCategory(Request $request, $id) {
         $method = $request->method();
         if ($request->isMethod('get')) {
-            $category = DB::table('expence_categories')
-                            ->where('id' , '=', $id)
-                            ->first();
+            $category = ExpenceCategory::find($id)->first();
             // 支出登録ページへ遷移させる
             return view('edit_expence_category')->with([
                 'category' => $category,
             ]);
         } else {
-            $name = $request->input('name');
-            $fixed_cost_flg = $request->input('fixed_cost');
-            $maximum_price = $request->input('maximum_price');
             //カテゴリ更新
-            DB::table('expence_categories')
-                ->where('id' , '=', $id)
-                ->update([
-                    'name' => $name,
-                    'fixed_cost_flg' => $fixed_cost_flg,
-                    'maximum_price' => $maximum_price,
-                    'user_id' => Auth::id(),
-                ]);
+            $category = ExpenceCategory::find($id);
+            $category->fixed_cost_flg = $request->input('fixed_cost');
+            $category->name = $request->input('name');
+            $category->maximum_price = $request->input('maximum_price');
+            $category->user_id = Auth::id();
+            $category->save();
             // カテゴリー詳細へ遷移させる
             return $this->categoryDetail($id);
         }

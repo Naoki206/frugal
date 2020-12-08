@@ -20,8 +20,9 @@
 @endif
 <br>
 @foreach ($category->expences as $expence)
-メモ：{{ $expence->name }}<br>
-値段：{{ $expence->price }}
+メモ：{{ $expence->name }}
+値段：{{ $expence->price }}円
+日時：{{ $expence->created_at }}
 <br>
 @endforeach
 
