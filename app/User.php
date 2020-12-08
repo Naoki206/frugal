@@ -11,6 +11,14 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * get expencies related to expence categories
+     */
+    public function expenceCategories()
+    {
+        return $this->hasMany('App\ExpencesCategory');
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

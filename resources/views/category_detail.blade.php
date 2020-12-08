@@ -19,8 +19,15 @@
     {{ $category->maximum_price }}
 @endif
 <br>
+@foreach ($category->expences as $expence)
+メモ：{{ $expence->name }}<br>
+値段：{{ $expence->price }}
+<br>
+@endforeach
+
 <a href="/edit_expence_category/{{ $category->id }}">編集</a>
 <a href="/delete_expence_category/{{ $category->id }}">削除</a>
+<a href="/home">戻る</a>
 
 </body>
 </html>

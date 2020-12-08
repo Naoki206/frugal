@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Expence;
+use App\ExpenceCategory;
 
 use Illuminate\Http\Request;
 
@@ -105,7 +107,7 @@ class HomeController extends Controller
         DB::table('expences')->insert([
             'price' => $price,
             'name' => $name, 
-            'expence_categories_id' => $category_id,
+            'expence_category_id' => $category_id,
         ]);
         
         //TOP画面に遷移
@@ -145,9 +147,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function categoryDetail($id) {
-        $category =DB::table('expence_categories')
-                        ->where('id', '=', $id)
-                        ->first();
+        $category = ExpenceCategory::find($id);
 
         return view('category_detail')->with([
             'category' => $category,
