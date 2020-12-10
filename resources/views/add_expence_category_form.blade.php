@@ -5,6 +5,15 @@
 </head>
 <body>
 <h2>支出フォルダ追加フォーム</h2>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <form action="/add_expence_category" method="POST">
     名前:
     <input name="name">

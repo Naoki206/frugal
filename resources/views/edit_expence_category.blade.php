@@ -5,6 +5,13 @@
 </head>
 <body>
 <h2>支出フォルダ編集</h2>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 <form action="/edit_expence_category/{{ $category->id }}" method="POST">
     名前:
     <input name="name" value={{ $category->name }}>

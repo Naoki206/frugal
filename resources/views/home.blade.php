@@ -14,11 +14,20 @@
 @if(!$variable_cost_categories->isEmpty())
 <!-- 支出フォーム -->
 <h2>支出</h2>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 <form action="/add_expence" method="POST">
     金額:
     <input name="price">
     メモ:
-    <input name="name">
+    <input name="memo">
     カテゴリ:
     <select class="form-control" id="sel01" name="category">
         @foreach ($variable_cost_categories as $category)

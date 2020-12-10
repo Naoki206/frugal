@@ -99,10 +99,16 @@ class HomeController extends Controller
      */
     public function addExpence(Request $request)
     {
+        // バリデーション
+        $validatedData = $request->validate([
+            'price' => 'required|numeric',
+            'memo' => 'required|max:20',
+        ]);
+
         //expencesにインサート
         $expence = new Expence();
         $expence->price = $request->input('price');
-        $expence->name = $request->input('name');
+        $expence->name = $request->input('memo');
         $expence->expence_category_id = $request->input('category');
         $expence->save();
         
@@ -122,6 +128,11 @@ class HomeController extends Controller
             // 支出登録ページへ遷移させる
             return view('add_expence_category_form');
         } else {
+            // バリデーション
+            $validatedData = $request->validate([
+                'name' => 'required|max:20',
+                'maximum_price' => 'required|numeric',
+            ]);
             //expencesにインサート
             $category = new ExpenceCategory();
             $category->fixed_cost_flg = $request->input('fixed_cost');
@@ -162,6 +173,11 @@ class HomeController extends Controller
                 'category' => $category,
             ]);
         } else {
+            // バリデーション
+            $validatedData = $request->validate([
+                'name' => 'required|max:20',
+                'maximum_price' => 'required|numeric',
+            ]);
             //カテゴリ更新
             $category = ExpenceCategory::find($id);
             $category->fixed_cost_flg = $request->input('fixed_cost');
