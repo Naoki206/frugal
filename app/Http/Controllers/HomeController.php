@@ -153,9 +153,14 @@ class HomeController extends Controller
      */
     public function categoryDetail($id) {
         $category = ExpenceCategory::find($id);
-
+        //今月の総利用額
+        $sum_expences = 0;
+        foreach ($category->expences as $expence) {
+            $sum_expences += $expence->price;
+        }
         return view('category_detail')->with([
             'category' => $category,
+            'sum_expences' => $sum_expences,
         ]);
     }
 
