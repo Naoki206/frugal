@@ -35,7 +35,7 @@
         @endforeach   
     </select>
     {{ csrf_field() }}
-    <button class="btn btn-success"> 送信 </button>
+    <button class="btn btn-success"> 追加 </button>
 </form>
 
 {{-- 支出フォルダ一覧 --}}
