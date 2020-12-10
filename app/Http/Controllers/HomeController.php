@@ -108,7 +108,7 @@ class HomeController extends Controller
         //expencesにインサート
         $expence = new Expence();
         $expence->price = $request->input('price');
-        $expence->name = $request->input('memo');
+        $expence->memo = $request->input('memo');
         $expence->expence_category_id = $request->input('category');
         $expence->save();
         
@@ -203,5 +203,34 @@ class HomeController extends Controller
             ->delete();
         // TOPページへ遷移させる
         return $this->index();  
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function editExpence(Request $request, $id) {
+        $method = $request->method();
+        if ($request->isMethod('get')) {
+            $expence = Expence::find($id)->first();
+            // 支出編集ページへ遷移させる
+            return view('edit_expence')->with([
+                'expence' => $expence,
+            ]);
+        } else {
+            // バリデーション
+            $validatedData = $request->validate([
+                'memo' => 'required|max:20',
+                'price' => 'required|numeric',
+            ]);
+            //支出更新
+            $expence= Expence::find($id);
+            $expence->memo = $request->input('memo');
+            $expence->price = $request->input('price');
+            $expence->save();
+            // カテゴリー詳細へ遷移させる
+            return $this->categoryDetail($expence->category_id);
+        }
     }
 }

@@ -24,3 +24,4 @@ Route::match(['get', 'post'], '/add_expence_category', 'HomeController@addExpenc
 Route::get('/category_detail/{id}', 'HomeController@categoryDetail')->name('category_detail');
 Route::match(['get', 'post'], '/edit_expence_category/{id}', 'HomeController@editExpenceCategory')->name('edit_category');
 Route::get('/delete_expence_category/{id}', 'HomeController@deleteExpenceCategory')->name('delete_category');
+Route::match(['get', 'post'], '/edit_expence/{id}', 'HomeController@editExpence')->name('edit_expence');

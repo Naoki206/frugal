@@ -34,5 +34,8 @@
     <br>
     <button class="btn btn-success"> 更新 </button>
 </form>
+<a href="/category_detail/{{ $category->id }}">
+    <button class="btn btn-success"> 戻る </button>
+</a>
 </body>
 </html>

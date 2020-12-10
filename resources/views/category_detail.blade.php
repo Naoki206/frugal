@@ -20,14 +20,16 @@
 @endif
 <br>
 @foreach ($category->expences as $expence)
-メモ：{{ $expence->memo }}
-値段：{{ $expence->price }}円
-日時：{{ $expence->created_at }}
+<a href="/edit_expence/{{ $expence->id }}">
+    メモ：{{ $expence->memo }}
+    値段：{{ $expence->price }}円
+</a>
+    日時：{{ $expence->created_at }}
 <br>
 @endforeach
 
-<a href="/edit_expence_category/{{ $category->id }}">編集</a>
-<a href="/delete_expence_category/{{ $category->id }}">削除</a>
+<a href="/edit_expence_category/{{ $category->id }}">フォルダ情報編集</a>
+<a href="/delete_expence_category/{{ $category->id }}">フォルダ削除</a>
 <a href="/home">戻る</a>
 
 </body>
