@@ -4,32 +4,28 @@
     <title>TOPページ</title>
 </head>
 <body>
-{{ $this_month }} 月
+<h1>{{ $this_month }} 月<h1>
 
-今月の貯金目標額
+<h2>今月の貯金目標額<h2>
 
-これまでの貯金額
+<h2>これまでの貯金額<h2>
 
 <!-- 支出フォルダ(変動費)が追加されていないと利用できないようにする。 -->
 @if(!$variable_cost_categories->isEmpty())
 <!-- 支出フォーム -->
-<h2>支出追加</h2>
+<h2>支出</h2>
 <form action="/add_expence" method="POST">
     金額:
     <input name="price">
-    <br>
     メモ:
     <input name="name">
-    <br>
     カテゴリ:
     <select class="form-control" id="sel01" name="category">
         @foreach ($variable_cost_categories as $category)
             <option value="{{ $category->id }}">{{ $category->name }}</option>
         @endforeach   
     </select>
-    <br>
     {{ csrf_field() }}
-    <br>
     <button class="btn btn-success"> 送信 </button>
 </form>
 

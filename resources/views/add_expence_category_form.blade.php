@@ -12,7 +12,7 @@
     種類:
     <select class="form-control" id="sel01" name="fixed_cost">
         <option value=1>固定費</option> 
-        <option value=0>変動費</option> 
+        <option value=0 selected>変動費</option> 
     </select>
     <br>
     上限金額/月:

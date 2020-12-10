@@ -6,7 +6,7 @@
 <body>
 
 <!-- フォームエリア -->
-<h2>あなたの収入は？</h2>
+<h2>収入を入力してスタートしましょう！</h2>
 <form action="/initial_setting" method="POST">
     収入:<br>
     <input name="income">
