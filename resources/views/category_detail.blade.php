@@ -10,7 +10,7 @@
     <h3>現在の使用状況<span>(今月の利用金額/上限金額)</span></h3>
     <h3>{{ $sum_expences }}/{{ $category->maximum_price }}¥</h3>
     <h3>詳細 </h3>
-    @foreach ($category->expences as $expence)
+    @foreach ($expences as $expence)
         <a href="/edit_expence/{{ $expence->id }}">
             メモ：{{ $expence->memo }}
             値段：{{ $expence->price }}円

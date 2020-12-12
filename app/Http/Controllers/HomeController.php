@@ -35,7 +35,7 @@ class HomeController extends Controller
             return view('initial_setting');
         };
 
-        //支出追加フォームに渡すカテゴリ一覧
+        //変動費、固定費のカテゴリ一覧
         $fixed_cost_categories = $this->getCategories(1, $user_id);
         $variable_cost_categories = $this->getCategories(0, $user_id);
 
@@ -55,16 +55,14 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * カテゴリー取得
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCategories($fixed_cost_flg, $user_id) {
-        $categories = 
-        DB::table('expence_categories')
-            ->where('user_id', '=', $user_id)
-            ->where('fixed_cost_flg', '=', $fixed_cost_flg)
-            ->get();
+        $categories = ExpenceCategory::where('user_id', $user_id)
+                                    ->where('fixed_cost_flg', $fixed_cost_flg) 
+                                    ->get();
         return $categories;
     }
 
@@ -165,6 +163,13 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function categoryDetail($id) {
+        $expences = 
+            Expence::whereRaw( 
+                "created_at >= DATE_TRUNC('month', now()) " . 
+                "AND created_at < DATE_TRUNC('month', now() + '1 months') + '-1 days' " .
+                "AND expence_category_id = ? ",
+                [$id])
+                ->get();      
         $category = ExpenceCategory::find($id);
         //今月の総利用額
         $sum_expences = 0;
@@ -172,6 +177,7 @@ class HomeController extends Controller
             $sum_expences += $expence->price;
         }
         return view('category_detail')->with([
+            'expences' => $expences,
             'category' => $category,
             'sum_expences' => $sum_expences,
         ]);
@@ -250,5 +256,20 @@ class HomeController extends Controller
             // カテゴリー詳細へ遷移させる
             return $this->categoryDetail($expence->category_id);
         }
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function updateCategories($id) {
+        //該当レコード削除
+        // TODO 論理削除に。 & 削除確認ポップを出す。
+        DB::table('expence_categories')
+            ->where('id' , '=', $id)
+            ->delete();
+        // TOPページへ遷移させる
+        return $this->index();  
     }
 }
