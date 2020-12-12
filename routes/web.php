@@ -25,3 +25,4 @@ Route::get('/category_detail/{id}', 'HomeController@categoryDetail')->name('cate
 Route::match(['get', 'post'], '/edit_expence_category/{id}', 'HomeController@editExpenceCategory')->name('edit_category');
 Route::get('/delete_expence_category/{id}', 'HomeController@deleteExpenceCategory')->name('delete_category');
 Route::match(['get', 'post'], '/edit_expence/{id}', 'HomeController@editExpence')->name('edit_expence');
+Route::get('/saving_history', 'HomeController@savingHistory')->name('saving_history');
