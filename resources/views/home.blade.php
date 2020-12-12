@@ -6,7 +6,10 @@
 <body>
 <h1>{{ $this_month }} 月<h1>
 
-<h2>今月の貯金目標額<h2>
+<h2>今月の貯金目標額:{{ $saving_amount }}</h2>
+@if ($saving_amount < 0)
+    支出予定額が収入を上回っています。予定を立て直しましょう！
+@endif
 
 <h2>これまでの貯金額<h2>
 

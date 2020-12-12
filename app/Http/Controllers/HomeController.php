@@ -30,7 +30,7 @@ class HomeController extends Controller
     {
         //初期設定ができているかチェック入れる。できてない場合設定ページ(本当は認証確認後のみに入れたい)
         $user_id = Auth::id();
-        $income = DB::table('users')->where('id', $user_id)->value('income');
+        $income = User::where('id', $user_id)->value('income');
         if ($income == null) {
             return view('initial_setting');
         };
@@ -39,17 +39,9 @@ class HomeController extends Controller
         $fixed_cost_categories = $this->getCategories(1, $user_id);
         $variable_cost_categories = $this->getCategories(0, $user_id);
 
-        //↓DBに二回接続するのと以下のように一回のDB接続でforeachで振り分けするのだったらどっちがよいのだろう。
-        // $categories = DB::table('expence_categories')->where('user_id', '=', $user_id)->get();
-        // $fixed_cost_categories = array();
-        // $variable_cost_categories = array();
-        // foreach ($categories as $category) {
-        //     if ($category->fixed_cost_flg) {
-        //         $fixed_cost_categories[] = $category;
-        //     } else {
-        //         $variable_cost_categories[] = $category;
-        //     }
-        // }
+        //貯金可能金額
+        $plan_expence_amount = ExpenceCategory::where('user_id', $user_id)->sum('maximum_price');
+        $saving_amount = $income - $plan_expence_amount;
 
         // 日時取得
         $this_month = date("m");
@@ -58,7 +50,7 @@ class HomeController extends Controller
             'this_month' => $this_month,
             'fixed_cost_categories' => $fixed_cost_categories,
             'variable_cost_categories' => $variable_cost_categories,
-            // 'expence_categories' => $categories,
+            'saving_amount' => $saving_amount,
         ]);
     }
 
@@ -74,6 +66,27 @@ class HomeController extends Controller
             ->where('fixed_cost_flg', '=', $fixed_cost_flg)
             ->get();
         return $categories;
+    }
+
+    /**
+     * get total expences
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTotalExpences($fixed_cost_flg, $user_id) {
+        $categories = ExpenceCategory::where('user_id', $user_id)->get();
+        $total_variable_cost = 0;
+        $total_fixed_cost = 0;
+        foreach ($categories as $category) {
+            //固定費
+            if ($category->fixed_cost_flg) {
+                $total_fixed_cost += $category->maximum_price;
+            }
+            //該当expence_category_idを持つ集計を足していく
+            $total_variable_cost += Expence::where('expence_category_id', $category->id)->sum('price');
+        }
+
+        return array($total_fixed_cost, $total_variable_cost);
     }
  
     /**
