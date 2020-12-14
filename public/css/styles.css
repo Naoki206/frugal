@@ -44,3 +44,12 @@ a.my-navbar-item:hover {
 .form-control[readonly] {
   background-color: #fff;
 }
+
+#add-expences {
+    margin-top: 24px;
+}
+
+#add-expence-category {
+    border-radius:100%;
+    margin: 0px 0px 5px 15px;
+}

@@ -39,6 +39,14 @@ class HomeController extends Controller
         $fixed_cost_categories = $this->getCategories(1, $user_id);
         $variable_cost_categories = $this->getCategories(0, $user_id);
 
+        //それぞれのカテゴリの当月総支出額をインスタンスに持たせる
+        foreach ($fixed_cost_categories as $category) {
+            $category->sum_expences =  $this->categoryExpencesSum($category->id);
+        }
+        foreach ($variable_cost_categories as $category) {
+            $category->sum_expences =  $this->categoryExpencesSum($category->id);
+        }
+
         //貯金可能金額
         $plan_expence_amount = ExpenceCategory::where('user_id', $user_id)->sum('maximum_price');
         $saving_amount = $income - $plan_expence_amount;
@@ -163,24 +171,48 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function categoryDetail($id) {
+        $category = ExpenceCategory::find($id);
+        //今月の総利用額
+        $sum_expences = $this->categoryExpencesSum($id);
+        //該当カテゴリの当月支出データ詳細
+        $expences = $this->getThisMonthExpences($id);
+        return view('category_detail')->with([
+            'expences' => $expences,
+            'category' => $category,
+            'sum_expences' => $sum_expences,
+        ]);
+    }
+
+    /**
+     * 該当カテゴリの当月総支出額を返す
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function categoryExpencesSum($id) {
+        $expences = $this->getThisMonthExpences($id);   
+        //今月の総利用額
+        $sum_expences = 0;
+        foreach ($expences as $expence) {
+            $sum_expences += $expence->price;
+        }
+        return $sum_expences;
+    }
+
+    /**
+     * 該当カテゴリの当月支出データを返す
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getThisMonthExpences($id) {
         $expences = 
             Expence::whereRaw( 
                 "created_at >= DATE_TRUNC('month', now()) " . 
                 "AND created_at < DATE_TRUNC('month', now() + '1 months') + '-1 days' " .
                 "AND expence_category_id = ? ",
                 [$id])
-                ->get();      
-        $category = ExpenceCategory::find($id);
-        //今月の総利用額
-        $sum_expences = 0;
-        foreach ($category->expences as $expence) {
-            $sum_expences += $expence->price;
-        }
-        return view('category_detail')->with([
-            'expences' => $expences,
-            'category' => $category,
-            'sum_expences' => $sum_expences,
-        ]);
+                ->get();  
+
+        return $expences;
     }
 
     /**

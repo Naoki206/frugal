@@ -1,68 +1,103 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>TOPページ</title>
-</head>
-<body>
-<h1>{{ $this_month }} 月<h1>
+@extends('layout')
 
-<h2>今月の貯金目標額:{{ $saving_amount }}</h2>
-@if ($saving_amount < 0)
-    支出予定額が収入を上回っています。予定を立て直しましょう！
-@endif
+@section('content')
+<div class="container">
+<h2>{{ $this_month }} 月<h2>
+    {{-- <h3>今月の貯金目標額:{{ $saving_amount }}</h3>
+    @if ($saving_amount < 0)
+        支出予定額が収入を上回っています。予定を立て直しましょう！
+    @endif --}}
+    
+    {{-- <a href="/saving_history/">
+        <h2>これまでの貯金履歴<h2>
+    </a> --}}
+    
+    <!-- 支出フォルダ(変動費)が追加されていないと利用できないようにする。 -->
+    @if(!$variable_cost_categories->isEmpty())
+    <!-- 支出フォーム -->
+    <h4>支出</h4>
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
-<a href="/saving_history/">
-    <h2>これまでの貯金履歴<h2>
-</a>
-
-<!-- 支出フォルダ(変動費)が追加されていないと利用できないようにする。 -->
-@if(!$variable_cost_categories->isEmpty())
-<!-- 支出フォーム -->
-<h2>支出</h2>
-@if ($errors->any())
-<div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
-<form action="/add_expence" method="POST">
-    金額:
-    <input name="price">
-    メモ:
-    <input name="memo">
-    カテゴリ:
-    <select class="form-control" id="sel01" name="category">
+    <form action="/add_expence" method="POST">
+        <div class="form-row">
+            <div class="form-group col-md-2">
+              <label for="inputCity">金額</label>
+              <input type="text" class="form-control" id="inputCity" name="price">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="inputCity">メモ</label>
+                <input type="text" class="form-control" id="inputCity" name="memo">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputState">カテゴリ</label>
+              <select id="inputState" class="form-control" name="category">
+                @foreach ($variable_cost_categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach   
+                {{ csrf_field() }}
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="inputState"></label>
+                <button type="submit" class="btn btn-primary col" id="add-expences">追加</button>
+            </div>
+            <div class="form-group col-md-12"></div>
+        </div>
+    </form>
+    
+    {{-- 支出フォルダ一覧 --}}
+    <br><br><br><br>
+    <h4>変動費</h4>
+    <div class="row">
         @foreach ($variable_cost_categories as $category)
-            <option value="{{ $category->id }}">{{ $category->name }}</option>
-        @endforeach   
-    </select>
-    {{ csrf_field() }}
-    <button class="btn btn-success"> 追加 </button>
-</form>
-
-{{-- 支出フォルダ一覧 --}}
-<h3>変動費</h3>
-@foreach($variable_cost_categories as $category)
-    <a href="/category_detail/{{ $category->id }}">{{ $category->name }}</a>
-@endforeach
-
-<h3>固定費</h3>
-@foreach($fixed_cost_categories as $category)
-    <a href="/category_detail/{{ $category->id }}">{{ $category->name }}</a>
-@endforeach
-<br><br>
-
-{{-- 支出フォルダ追加フォームここはTOPページにあったら邪魔だからベットページ作る --}}
-支出フォルダ
-<a href="/add_expence_category">追加</a>
-@else
+        <div class="col col-md-2">
+          <nav class="panel panel-default">
+                <div class="panel-heading">{{ $category->name }}</div>
+                <a href="/category_detail/{{ $category->id }}">
+                    <div class="list-group">
+                       {{ $category->sum_expences }} / {{ $category->maximum_price }} ¥
+                    </div>
+                </a>
+          </nav>
+        </div>
+        @endforeach
+    </div>
     <br>
-    まずは支出フォルダ(変動費)を作成しましょう!
-    <a href="/add_expence_category">作成！</a>
-@endif
 
-</body>
-</html>
+    <h4>固定費</h4>
+    <div class="row">
+        @foreach ($fixed_cost_categories as $category)
+        <div class="col col-md-2">
+          <nav class="panel panel-default">
+                <div class="panel-heading">{{ $category->name }}</div>
+                <a href="/category_detail/{{ $category->id }}">
+                    <div class="list-group">
+                        {{ $category->maximum_price }} ¥
+                    </div>
+                </a>
+          </nav>
+        </div>
+        @endforeach
+    </div>
+    <br><br>
+    
+    {{-- 支出フォルダ追加フォームここはTOPページにあったら邪魔だからベットページ作る --}}
+    支出フォルダ  
+    <a href="/add_expence_category">
+        <button type="submit" class="btn btn-primary" id="add-expence-category">+</button>
+    </a>
+    @else
+        <br>
+        まずは支出フォルダ(変動費)を作成しましょう!
+        <a href="/add_expence_category">作成！</a>
+    @endif
+</div>
+@endsection
