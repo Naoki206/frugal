@@ -312,8 +312,8 @@ class HomeController extends Controller
      */
     public function savingHistory() {
         $user_id = Auth::id();
-        $first_category_created_at = ExpenceCategory::where('user_id', $user_id)->first()->created_at;
-        $first_category_created_month = date('Y年n月', strtotime($first_category_created_at));
+        // $first_category_created_at = ExpenceCategory::where('user_id', $user_id)->first()->created_at;
+        // $first_category_created_month = date('Y年n月', strtotime($first_category_created_at));
         
     }
 }

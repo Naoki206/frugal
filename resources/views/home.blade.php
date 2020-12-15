@@ -8,12 +8,6 @@
         支出予定額が収入を上回っています。予定を立て直しましょう！
     @endif --}}
     
-    {{-- <a href="/saving_history/">
-        <h2>これまでの貯金履歴<h2>
-    </a> --}}
-    
-    <!-- 支出フォルダ(変動費)が追加されていないと利用できないようにする。 -->
-    @if(!$variable_cost_categories->isEmpty())
     <!-- 支出フォーム -->
     <h4>支出</h4>
     @if ($errors->any())
@@ -26,6 +20,7 @@
     </div>
     @endif
 
+    @if(!$variable_cost_categories->isEmpty())
     <form action="/add_expence" method="POST">
         <div class="form-row">
             <div class="form-group col-md-2">
@@ -52,6 +47,7 @@
             <div class="form-group col-md-12"></div>
         </div>
     </form>
+    @endif
     
     {{-- 支出フォルダ一覧 --}}
     <br><br><br><br>
@@ -90,14 +86,12 @@
     <br><br>
     
     {{-- 支出フォルダ追加フォームここはTOPページにあったら邪魔だからベットページ作る --}}
+    @if($variable_cost_categories->isEmpty())
+        <h4>↓まずは支出フォルダ(変動費)を作成しましょう!↓</h4>
+    @endif
     支出フォルダ  
     <a href="/add_expence_category">
         <button type="submit" class="btn btn-primary" id="add-expence-category">+</button>
     </a>
-    @else
-        <br>
-        まずは支出フォルダ(変動費)を作成しましょう!
-        <a href="/add_expence_category">作成！</a>
-    @endif
 </div>
 @endsection

@@ -1,12 +1,10 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>初期設定画面</title>
-</head>
-<body>
+@extends('layout')
+
+@section('content')
+<div class="container">
 
 <!-- フォームエリア -->
-<h2>収入を入力してスタートしましょう！</h2>
+<h3>収入を入力してスタートしましょう！</h3>
 <form action="/initial_setting" method="POST">
     収入:<br>
     <input name="income">
@@ -16,5 +14,5 @@
     <button class="btn btn-success"> 送信 </button>
 </form>
 
-</body>
-</html>
+</div>
+@endsection
