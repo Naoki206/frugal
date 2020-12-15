@@ -31,9 +31,9 @@ class HomeController extends Controller
         //初期設定ができているかチェック入れる。できてない場合設定ページ(本当は認証確認後のみに入れたい)
         $user_id = Auth::id();
         $income = User::where('id', $user_id)->value('income');
-        if ($income == null) {
-            return view('initial_setting');
-        };
+        // if ($income == null) {
+        //     return view('initial_setting');
+        // };
 
         //変動費、固定費のカテゴリ一覧
         $fixed_cost_categories = $this->getCategories(1, $user_id);

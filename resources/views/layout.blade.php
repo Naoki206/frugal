@@ -16,7 +16,7 @@
         @if(Auth::check())  
           {{-- <span class="my-navbar-item">ようこそ, {{ Auth::user()->name }}さん</span>
           ｜ --}}
-          <a href="/saving_history/" class="my-navbar-item">履歴</a>
+          {{-- <a href="/saving_history/" class="my-navbar-item">履歴</a> --}}
           <a href="logout" id="logout" class="my-navbar-item">ログアウト</a>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf

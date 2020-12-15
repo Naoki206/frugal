@@ -8,6 +8,7 @@
         支出予定額が収入を上回っています。予定を立て直しましょう！
     @endif --}}
     
+    @if(!$variable_cost_categories->isEmpty())
     <!-- 支出フォーム -->
     <h4>支出</h4>
     @if ($errors->any())
@@ -20,7 +21,7 @@
     </div>
     @endif
 
-    @if(!$variable_cost_categories->isEmpty())
+    
     <form action="/add_expence" method="POST">
         <div class="form-row">
             <div class="form-group col-md-2">
@@ -47,7 +48,6 @@
             <div class="form-group col-md-12"></div>
         </div>
     </form>
-    @endif
     
     {{-- 支出フォルダ一覧 --}}
     <br><br><br><br>
@@ -84,6 +84,7 @@
         @endforeach
     </div>
     <br><br>
+    @endif
     
     {{-- 支出フォルダ追加フォームここはTOPページにあったら邪魔だからベットページ作る --}}
     @if($variable_cost_categories->isEmpty())
