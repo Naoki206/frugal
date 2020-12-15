@@ -1,32 +1,41 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>支出編集フォーム</title>
-</head>
-<body>
-<h2>支出編集</h2>
-<div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-<form action="/edit_expence/{{ $expence->id }}" method="POST">
-    値段:
-    <input name="price" value={{ $expence->price }}>
-    <br>
-    メモ:
-    <input name="name" value={{ $expence->memo }}>
-    <br>
-    日時:
-    {{ $expence->created_at }}
-    {{ csrf_field() }}
-    <br>
-    <button class="btn btn-success"> 更新 </button>
-</form>
-<a href="/category_detail/{{ $expence->expence_category_id }}">
-    <button class="btn btn-success"> 戻る </button>
-</a>
-</body>
-</html>
+@extends('layout')
+
+@section('content')
+
+<div class="container">
+    <div class="row">
+      <div class="col col-md-offset-3 col-md-6">
+        <nav class="panel panel-default">
+          <div class="panel-heading">支出編集</div>
+          <div class="panel-body">
+            @if($errors->any())
+              <div class="alert alert-danger">
+                @foreach($errors->all() as $message)
+                  <p>{{ $message }}</p>
+                @endforeach
+              </div>
+            @endif
+            <form action="/edit_expence/{{ $expence->id }}" method="POST">
+              @csrf
+              <div class="form-group">
+                <label for="title">メモ</label>
+                <input type="text" class="form-control"　name="memo" value={{ $expence->memo }} id="title" />
+              </div>
+              <div class="form-group">
+                <label for="due_date">金額</label>
+                <input type="text" class="form-control"　name="price" value={{ $expence->price }} id="title" />
+              </div>
+              <div class="form-group">
+                <label for="title">{{ $expence->created_at }}</label>
+                {{ csrf_field() }}
+              </div>
+              <div class="text-right">
+                <button type="submit" class="btn btn-primary">更新</button>
+              </div>
+            </form>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+@endsection

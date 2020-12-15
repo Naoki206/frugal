@@ -223,7 +223,7 @@ class HomeController extends Controller
     public function editExpenceCategory(Request $request, $id) {
         $method = $request->method();
         if ($request->isMethod('get')) {
-            $category = ExpenceCategory::find($id)->first();
+            $category = ExpenceCategory::find($id);
             // 支出登録ページへ遷移させる
             return view('edit_expence_category')->with([
                 'category' => $category,
