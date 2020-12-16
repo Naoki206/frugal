@@ -268,8 +268,8 @@ class HomeController extends Controller
      */
     public function editExpence(Request $request, $id) {
         $method = $request->method();
+        $expence = Expence::find($id);
         if ($request->isMethod('get')) {
-            $expence = Expence::find($id);
             // 支出編集ページへ遷移させる
             return view('edit_expence')->with([
                 'expence' => $expence,
@@ -281,7 +281,6 @@ class HomeController extends Controller
                 'price' => 'required|numeric',
             ]);
             //支出更新
-            $expence= Expence::find($id);
             $expence->memo = $request->input('memo');
             $expence->price = $request->input('price');
             $expence->save();
