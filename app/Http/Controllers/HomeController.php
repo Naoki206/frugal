@@ -269,7 +269,7 @@ class HomeController extends Controller
     public function editExpence(Request $request, $id) {
         $method = $request->method();
         if ($request->isMethod('get')) {
-            $expence = Expence::find($id)->first();
+            $expence = Expence::find($id);
             // 支出編集ページへ遷移させる
             return view('edit_expence')->with([
                 'expence' => $expence,
