@@ -285,7 +285,7 @@ class HomeController extends Controller
             $expence->price = $request->input('price');
             $expence->save();
             // カテゴリー詳細へ遷移させる
-            return $this->categoryDetail($expence->category_id);
+            return $this->categoryDetail($expence->expence_category_id);
         }
     }
 
