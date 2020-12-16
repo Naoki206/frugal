@@ -120,7 +120,7 @@ class HomeController extends Controller
     {
         // バリデーション
         $validatedData = $request->validate([
-            'price' => 'required|numeric',
+            'price' => 'digits_between:0,100000',
             'memo' => 'required|max:20',
         ]);
 
@@ -150,7 +150,7 @@ class HomeController extends Controller
             // バリデーション
             $validatedData = $request->validate([
                 'name' => 'required|max:20',
-                'maximum_price' => 'required|numeric',
+                'maximum_price' => 'digits_between:0,100000',
             ]);
             //expencesにインサート
             $category = new ExpenceCategory();
@@ -232,7 +232,7 @@ class HomeController extends Controller
             // バリデーション
             $validatedData = $request->validate([
                 'name' => 'required|max:20',
-                'maximum_price' => 'required|numeric',
+                'maximum_price' => 'digits_between:0,100000',
             ]);
             //カテゴリ更新
             $category = ExpenceCategory::find($id);
@@ -278,7 +278,7 @@ class HomeController extends Controller
             // バリデーション
             $validatedData = $request->validate([
                 'memo' => 'required|max:20',
-                'price' => 'required|numeric',
+                'price' => 'digits_between:0,100000',
             ]);
             //支出更新
             $expence->memo = $request->input('memo');
