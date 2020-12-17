@@ -40,6 +40,6 @@ class CustomValidation implements Rule
      */
     public function message()
     {
-        return '全角空白を決して入力してください';
+        return '全角スペースは入力しないでください';
     }
 }

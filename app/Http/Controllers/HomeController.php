@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Expence;
 use App\ExpenceCategory;
 use App\User;
+use App\Rules\CustomValidation;
 
 use Illuminate\Http\Request;
 
@@ -120,8 +121,8 @@ class HomeController extends Controller
     {
         // バリデーション
         $validatedData = $request->validate([
-            'price' => 'required|digits_between:0,100000',
-            'memo' => 'required|max:20',
+            'price' => ['required', 'digits_between:0,100000', new CustomValidation],
+            'memo' => ['required','max:20', new CustomValidation],
         ]);
 
         //expencesにインサート
@@ -149,8 +150,8 @@ class HomeController extends Controller
         } else {
             // バリデーション
             $validatedData = $request->validate([
-                'name' => 'required|max:20',
-                'maximum_price' => 'required|digits_between:0,100000',
+                'name' => ['required','max:20', new CustomValidation],
+                'maximum_price' => ['required', 'digits_between:0,100000', new CustomValidation],
             ]);
             //expencesにインサート
             $category = new ExpenceCategory();
@@ -231,8 +232,8 @@ class HomeController extends Controller
         } else {
             // バリデーション
             $validatedData = $request->validate([
-                'name' => 'required|max:20',
-                'maximum_price' => 'required|digits_between:0,100000',
+                'name' => ['required','max:20', new CustomValidation],
+                'maximum_price' => ['required', 'digits_between:0,100000', new CustomValidation],
             ]);
             //カテゴリ更新
             $category = ExpenceCategory::find($id);
@@ -277,8 +278,8 @@ class HomeController extends Controller
         } else {
             // バリデーション
             $validatedData = $request->validate([
-                'memo' => 'required|max:20',
-                'price' => 'required|digits_between:0,100000',
+                'memo' => ['required','max:20', new CustomValidation],
+                'price' => ['required', 'digits_between:0,100000', new CustomValidation],
             ]);
             //支出更新
             $expence->memo = $request->input('memo');
