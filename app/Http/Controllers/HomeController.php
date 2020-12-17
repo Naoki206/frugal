@@ -120,7 +120,7 @@ class HomeController extends Controller
     {
         // バリデーション
         $validatedData = $request->validate([
-            'price' => 'digits_between:0,100000',
+            'price' => 'required|digits_between:0,100000',
             'memo' => 'required|max:20',
         ]);
 
